@@ -57,14 +57,15 @@ jobs:
       - name: tag
         id: tag
         run: |
-          echo "::set-output name=release_tag::ZLMediaKit_$(date +"%Y.%m.%d-%H%M")"
+          echo "::set-output name=release_tag::ZLMediaKit_$()"
+          echo "RELEASE_TAG=$(date +"%Y.%m.%d-%H%M")" >> ${GITHUB_OUTPUT}
 
       - name: Upload to release
         uses: softprops/action-gh-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
         with:
-          tag_name: ${{ steps.tag.outputs.release_tag }}
+          tag_name: ${{ steps.tag.outputs.RELEASE_TAG }}
           files: ${{ env.WORKDIR }}/ZLMediaKitInstall/*
 
       - name: Delete workflow runs

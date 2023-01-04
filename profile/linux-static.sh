@@ -14,7 +14,6 @@ function main {
         -DENABLE_SRT:BOOL="1" \
         -DCMAKE_EXE_LINKER_FLAGS_RELEASEE:STRING="-static" \
         -DENABLE_FFMPEG:BOOL="1" \
-        -DENABLE_JEMALLOC_STATIC:BOOL="1" \
         -DENABLE_PLAYER:BOOL="1" \
         -DENABLE_RTPPROXY:BOOL="0" \
         -DCMAKE_BUILD_TYPE:STRING="Release" 
