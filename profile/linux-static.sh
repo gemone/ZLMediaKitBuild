@@ -21,7 +21,7 @@ function main {
 
     cd "${build_path}" || exit
     make "-j$(nproc)"
-    make install
+    sudo make install
     echo "done"
 }
 

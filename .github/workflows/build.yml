@@ -18,7 +18,8 @@ jobs:
 
       - name: mkdir workdir
         run: |
-          mkdir ${{ env.WORKDIR }}
+          sudo mkdir -p ${{ env.WORKDIR }}
+          sudo chown $USER:$GROUPS ${{ env.WORKDIR }}
 
       - name: build jemalloc
         working-directory: ${{ env.WORKDIR }}
