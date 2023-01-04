@@ -30,6 +30,7 @@ jobs:
            libssl-dev \
            libavcodec-dev \
            libavutil-dev \
+           zip \
            ffmpeg
 
       - name: build jemalloc
@@ -54,13 +55,19 @@ jobs:
         run: |
           ls -al ${{ env.WORKDIR }}
           ls -al ${{ env.WORKDIR }}/ZLMediaKitInstall
-      
+
       # TODO tag
       - name: tag
         id: tag
         run: |
           touch release.txt
           echo "RELEASE_TAG=$(date +"%Y.%m.%d-%H%M")" >> ${GITHUB_OUTPUT}
+
+      - name: zip files
+        working-directory: ${{ env.WORKDIR }}
+        run: |
+          zip -R ZLMEDIAKIT.zip ${{ env.WORKDIR }}/ZLMediaKitInstall/*
+          sha256sum ZLMEDIAKIT.zip > sha256sum.txt
 
       - name: Upload to release
         uses: softprops/action-gh-release@v1
@@ -69,7 +76,9 @@ jobs:
         with:
           tag_name: ${{ steps.tag.outputs.RELEASE_TAG }}
           body_path: release.txt
-          files: ${{ env.WORKDIR }}/ZLMediaKitInstall/*
+          files: |
+            ${{ env.WORKDIR }}/ZLMEDIAKIT.zip
+            ${{ env.WORKDIR }}/sha256sum.txt
 
       - name: Delete workflow runs
         uses: GitRML/delete-workflow-runs@main
