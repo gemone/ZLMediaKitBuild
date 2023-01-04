@@ -21,11 +21,6 @@ jobs:
           sudo mkdir -p ${{ env.WORKDIR }}
           sudo chown $USER:$GROUPS ${{ env.WORKDIR }}
 
-      - name: build jemalloc
-        working-directory: ${{ env.WORKDIR }}
-        run: |
-          ${GITHUB_WORKSPACE}/scripts/build-jemalloc-linux.sh ${{ env.JEMALLOC_VERSION }} ${{ env.WORKDIR }}/jemalloc 1
-      
       - name: install deps
         run: |
           sudo -E apt-get -qq update
@@ -33,10 +28,14 @@ jobs:
            build-essential \
            cmake \
            libssl-dev \
-           libsdl-dev \
            libavcodec-dev \
            libavutil-dev \
            ffmpeg
+
+      - name: build jemalloc
+        working-directory: ${{ env.WORKDIR }}
+        run: |
+          sudo ${GITHUB_WORKSPACE}/scripts/build-jemalloc-linux.sh ${{ env.JEMALLOC_VERSION }} ${{ env.WORKDIR }}/jemalloc 1
 
       - name: build
         working-directory: ${{ env.WORKDIR }}
