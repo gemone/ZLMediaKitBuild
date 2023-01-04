@@ -12,7 +12,7 @@ function main {
         -DCMAKE_INSTALL_PREFIX="${prefix_path}" \
         -DENABLE_WEBRTC:BOOL="0" \
         -DENABLE_SRT:BOOL="1" \
-        -DCMAKE_EXE_LINKER_FLAGS_RELEASEE:STRING="-static" \
+        -DCMAKE_EXE_LINKER_FLAGS:STRING="-static" \
         -DENABLE_FFMPEG:BOOL="1" \
         -DENABLE_PLAYER:BOOL="1" \
         -DENABLE_RTPPROXY:BOOL="0" \
