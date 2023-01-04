@@ -16,6 +16,10 @@ jobs:
       - name: Checkout Repo
         uses: actions/checkout@main
 
+      - name: mkdir workdir
+        run: |
+          mkdir ${{ env.WORKDIR }}
+
       - name: build jemalloc
         working-directory: ${{ env.WORKDIR }}
         run: |
