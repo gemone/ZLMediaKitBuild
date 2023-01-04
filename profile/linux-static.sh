@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
 function main {
-    src_path=${1:/workdir/src}
-    build_path=${2:/workdir/build}
-    prefix_path=${3:/workdir/install}
+    src_path=${1:-/workdir/src}
+    build_path=${2:-/workdir/build}
+    prefix_path=${3:-/workdir/install}
 
     git clone --depth 1 https://github.com/ZLMediaKit/ZLMediaKit.git "${src_path}"
     git -C "${src_path}" submodule update --init

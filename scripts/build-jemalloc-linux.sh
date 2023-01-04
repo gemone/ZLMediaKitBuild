@@ -7,7 +7,7 @@ src_url="https://github.com/jemalloc/jemalloc.git"
 function main {
     version=${1:-5.3.0}
     build_path=${2:-./build/jemalloc}
-    static=${3:true}
+    static=${3:-true}
 
     pwd=${PWD}
 
