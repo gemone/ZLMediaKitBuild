@@ -1,0 +1,78 @@
+
+name: Build ZLMEDIAKIT
+
+on:
+  push:
+
+env:
+  WORKDIR: /workdir
+  JEMALLOC_VERSION: 5.3.0
+
+jobs:
+  build:
+    name: Build ZLMEDIAKIT
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@main
+
+      - name: build jemalloc
+        working-directory: ${{ env.WORKDIR }}
+        run: |
+          ${GITHUB_WORKSPACE}/scripts/build-jemalloc-linux.sh ${{ env.JEMALLOC_VERSION }} ${{ env.WORKDIR }}/jemalloc 1
+      
+      - name: install deps
+        run: |
+          sudo -E apt-get -qq update
+          sudo -E apt-get -qq install \
+           build-essential \
+           cmake \
+           libssl-dev \
+           libsdl-dev \
+           libavcodec-dev \
+           libavutil-dev \
+           ffmpeg
+
+      - name: build
+        working-directory: ${{ env.WORKDIR }}
+        run: |
+          build_path=${{ env.WORKDIR }}/ZLMediaKitBuild
+          install_path=${{ env.WORKDIR }}/ZLMediaKitInstall
+          mkdir -p ${build_path}
+          mkdir -p ${install_path}
+
+          ${GITHUB_WORKSPACE}/profile/linux-static.sh ${{ env.WORKDIR }}/ZLMediaKit ${build_path} ${install_path}
+
+      - name: check space usage
+        run: df -hT
+      
+      - name: list file
+        run: ls -al ${{ env.WORKDIR }}
+      
+      # TODO tag
+      - name: tag
+        id: tag
+        run: |
+          echo "::set-output name=release_tag::ZLMediaKit_$(date +"%Y.%m.%d-%H%M")"
+
+      - name: Upload to release
+        uses: softprops/action-gh-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+        with:
+          tag_name: ${{ steps.tag.outputs.release_tag }}
+          files: ${{ env.WORKDIR }}/ZLMediaKitInstall/*
+
+      - name: Delete workflow runs
+        uses: GitRML/delete-workflow-runs@main
+        with:
+          retain_days: 1
+          keep_minimum_runs: 3 
+      
+      - name: Remove old Releases
+        uses: dev-drprasad/delete-older-releases@v0.1.0
+        with:
+          keep_latest: 12
+          delete_tags: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}      
