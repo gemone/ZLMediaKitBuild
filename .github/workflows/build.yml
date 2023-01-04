@@ -66,7 +66,7 @@ jobs:
       - name: zip files
         working-directory: ${{ env.WORKDIR }}
         run: |
-          zip -R ZLMEDIAKIT.zip ${{ env.WORKDIR }}/ZLMediaKitInstall/*
+          zip -r ZLMEDIAKIT.zip ${{ env.WORKDIR }}/ZLMediaKitInstall/*
           sha256sum ZLMEDIAKIT.zip > sha256sum.txt
 
       - name: Upload to release
