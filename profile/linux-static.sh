@@ -13,6 +13,7 @@ function main {
         -DENABLE_WEBRTC:BOOL="0" \
         -DENABLE_SRT:BOOL="1" \
         -DCMAKE_EXE_LINKER_FLAGS:STRING="-static" \
+        -DENABLE_API_STATIC_LIB:BOOL="1" \
         -DENABLE_FFMPEG:BOOL="1" \
         -DENABLE_PLAYER:BOOL="1" \
         -DENABLE_RTPPROXY:BOOL="0" \
