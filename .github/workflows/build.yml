@@ -2,9 +2,7 @@
 name: Build ZLMEDIAKIT
 
 on:
-  push:
-    branches:
-      - main
+  repository_dispatch:
 
 env:
   WORKDIR: /workdir

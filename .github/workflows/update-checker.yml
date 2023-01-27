@@ -1,0 +1,48 @@
+
+name: Update Checker
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+  schedule:
+    - cron: 0 */18 * * *
+
+jobs:
+  check:
+    name: Check ZLMEDIAKIT
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Get Commit Hash
+        id: getHash
+        run: |
+          git clone --depth 1 https://github.com/ZLMediaKit/ZLMediaKit.git ZLMEDIAKIT
+          echo "COMMIT_HASH=$(git -C ZLMEDIAKIT rev-parse HEAD)" >> ${GITHUB_OUTPUT}
+
+      - name: Compare Commit HASH
+        id: cacheHash
+        uses: actions/cache@v2
+        with:
+          path: .commitHash
+          key: HEAD-${{ steps.getHash.COMMIT_HASH }}
+
+      - name: Save New Commit Hash
+        if: steps.cacheHash.outputs.cache-hit != 'true'
+        run: |
+          echo "${{ steps.getHash.outputs.commitHash }}" | tee .commitHash
+
+      - name: Trigger build
+        if: steps.cacheHash.outputs.cache-hit != 'true'
+        uses: peter-evans/repository-dispatch@v1
+        with:
+          token: ${{ secrets.ACTIONS_TOKEN }}
+          event-type: Source Code Update
+
+      - name: Delete workflow runs
+        uses: GitRML/delete-workflow-runs@main
+        with:
+          retain_days: 1
+          keep_minimum_runs: 1
+
