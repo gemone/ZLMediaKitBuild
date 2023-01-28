@@ -23,7 +23,7 @@ jobs:
 
       - name: Compare Commit HASH
         id: cacheHash
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: .commitHash
           key: HEAD-${{ steps.getHash.COMMIT_HASH }}
@@ -37,13 +37,14 @@ jobs:
         if: steps.cacheHash.outputs.cache-hit != 'true'
         uses: peter-evans/repository-dispatch@v2
         with:
-          token: ${{ secrets.ACTIONS_TRIGGER_PAT }}
+          token: ${{ github.token }}
           repository: gemone/ZLMediaKitBuild
           event-type: Source Code Update
 
       - name: Delete workflow runs
-        uses: GitRML/delete-workflow-runs@main
+        uses: Mattraks/delete-workflow-runs@v2
         with:
+          token: ${{ github.token }}
           retain_days: 1
           keep_minimum_runs: 1
 
