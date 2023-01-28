@@ -26,7 +26,7 @@ jobs:
         uses: actions/cache@v3
         with:
           path: .commitHash
-          key: HEAD-${{ steps.getHash.COMMIT_HASH }}
+          key: HEAD-${{ steps.getHash.outputs.COMMIT_HASH }}
 
       - name: Save New Commit Hash
         if: steps.cacheHash.outputs.cache-hit != 'true'
